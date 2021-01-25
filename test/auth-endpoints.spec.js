@@ -23,16 +23,11 @@ describe('Auth Endpoints', function () {
    * @description Get token for login
    **/
   describe(`POST /api/auth/token`, () => {
-    beforeEach('insert users', () =>
-      helpers.seedUsers(
-        db,
-        testUsers,
-      )
-    )
+    beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
     const requiredFields = ['username', 'password']
 
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       const loginAttemptBody = {
         username: testUser.username,
         password: testUser.password,
@@ -59,7 +54,10 @@ describe('Auth Endpoints', function () {
     })
 
     it(`responds 400 'invalid username or password' when bad password`, () => {
-      const userInvalidPass = { username: testUser.username, password: 'incorrect' }
+      const userInvalidPass = {
+        username: testUser.username,
+        password: 'incorrect',
+      }
       return supertest(app)
         .post('/api/auth/token')
         .send(userInvalidPass)
@@ -93,12 +91,7 @@ describe('Auth Endpoints', function () {
    * @description Refresh token
    **/
   describe(`PATCH /api/auth/token`, () => {
-    beforeEach('insert users', () =>
-      helpers.seedUsers(
-        db,
-        testUsers,
-      )
-    )
+    beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
     it(`responds 200 and JWT auth token using secret`, () => {
       const expectedToken = jwt.sign(

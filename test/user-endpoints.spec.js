@@ -27,7 +27,7 @@ describe('User Endpoints', function () {
 
     const requiredFields = ['username', 'password', 'name']
 
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       const registerAttemptBody = {
         username: 'test username',
         password: 'test password',
@@ -79,7 +79,9 @@ describe('User Endpoints', function () {
       return supertest(app)
         .post('/api/user')
         .send(userPasswordStartsSpaces)
-        .expect(400, { error: `Password must not start or end with empty spaces` })
+        .expect(400, {
+          error: `Password must not start or end with empty spaces`,
+        })
     })
 
     it(`responds 400 error when password ends with spaces`, () => {
@@ -91,7 +93,9 @@ describe('User Endpoints', function () {
       return supertest(app)
         .post('/api/user')
         .send(userPasswordEndsSpaces)
-        .expect(400, { error: `Password must not start or end with empty spaces` })
+        .expect(400, {
+          error: `Password must not start or end with empty spaces`,
+        })
     })
 
     it(`responds 400 error when password isn't complex enough`, () => {
@@ -103,7 +107,9 @@ describe('User Endpoints', function () {
       return supertest(app)
         .post('/api/user')
         .send(userPasswordNotComplex)
-        .expect(400, { error: `Password must contain one upper case, lower case, number and special character` })
+        .expect(400, {
+          error: `Password must contain one upper case, lower case, number and special character`,
+        })
     })
 
     it(`responds 400 'User name already taken' when username isn't unique`, () => {
@@ -129,7 +135,7 @@ describe('User Endpoints', function () {
           .post('/api/user')
           .send(newUser)
           .expect(201)
-          .expect(res => {
+          .expect((res) => {
             expect(res.body).to.have.property('id')
             expect(res.body.username).to.eql(newUser.username)
             expect(res.body.name).to.eql(newUser.name)
@@ -147,19 +153,19 @@ describe('User Endpoints', function () {
         return supertest(app)
           .post('/api/user')
           .send(newUser)
-          .expect(res =>
+          .expect((res) =>
             db
               .from('user')
               .select('*')
               .where({ id: res.body.id })
               .first()
-              .then(row => {
+              .then((row) => {
                 expect(row.username).to.eql(newUser.username)
                 expect(row.name).to.eql(newUser.name)
 
                 return bcrypt.compare(newUser.password, row.password)
               })
-              .then(compareMatch => {
+              .then((compareMatch) => {
                 expect(compareMatch).to.be.true
               })
           )
@@ -175,55 +181,51 @@ describe('User Endpoints', function () {
           name: 'French',
           total_score: 0,
           words: [
-            { original: 'entraine toi', translation: 'practice' },
-            { original: 'bonjour', translation: 'hello' },
-            { original: 'maison', translation: 'house' },
-            { original: 'développeur', translation: 'developer' },
-            { original: 'traduire', translation: 'translate' },
-            { original: 'incroyable', translation: 'amazing' },
-            { original: 'chien', translation: 'dog' },
-            { original: 'chat', translation: 'cat' },
-          ]
+            { original: 'jouer', translation: 'play' },
+            { original: 'souffrance', translation: 'suffering' },
+            { original: 'à la mode', translation: 'fashionable' },
+            { original: 'âcre', translation: 'pungent' },
+            { original: 'transitoire', translation: 'transient' },
+            { original: 'gonflée', translation: 'bloated' },
+            { original: 'gracieuse', translation: 'graceful' },
+            { original: 'misère', translation: 'misery' },
+          ],
         }
         return supertest(app)
           .post('/api/user')
           .send(newUser)
-          .then(res =>
+          .then((res) =>
             /*
             get languages and words for user that were inserted to db
             */
-            db.from('language').select(
-              'language.*',
-              db.raw(
-                `COALESCE(
+            db
+              .from('language')
+              .select(
+                'language.*',
+                db.raw(
+                  `COALESCE(
                   json_agg(DISTINCT word)
                   filter(WHERE word.id IS NOT NULL),
                   '[]'
                 ) AS words`
-              ),
-            )
-            .leftJoin('word', 'word.language_id', 'language.id')
-            .groupBy('language.id')
-            .where({ user_id: res.body.id })
+                )
+              )
+              .leftJoin('word', 'word.language_id', 'language.id')
+              .groupBy('language.id')
+              .where({ user_id: res.body.id })
           )
-          .then(dbLists => {
+          .then((dbLists) => {
             expect(dbLists).to.have.length(1)
 
             expect(dbLists[0].name).to.eql(expectedList.name)
             expect(dbLists[0].total_score).to.eql(0)
 
             const dbWords = dbLists[0].words
-            expect(dbWords).to.have.length(
-              expectedList.words.length
-            )
+            expect(dbWords).to.have.length(expectedList.words.length)
 
             expectedList.words.forEach((expectedWord, w) => {
-              expect(dbWords[w].original).to.eql(
-                expectedWord.original
-              )
-              expect(dbWords[w].translation).to.eql(
-                expectedWord.translation
-              )
+              expect(dbWords[w].original).to.eql(expectedWord.original)
+              expect(dbWords[w].translation).to.eql(expectedWord.translation)
               expect(dbWords[w].memory_value).to.eql(1)
             })
           })
