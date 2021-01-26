@@ -52,7 +52,9 @@ const LanguageService = {
     const list = new LinkedList()
     list.insertLast(headNode[0])
     let nextId = headNode[0].next
-    let currentWord = currentWord.next
+    let currentWord = words.find((word) => word.id === nextId)
+    list.insertLast(currentWord)
+    nextId = currentWord.next
     currentWord = words.find((word) => word.id === nextId)
 
     while (currentWord !== null) {
