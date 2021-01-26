@@ -79,9 +79,12 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
       req.app.get('db'),
       req.language.id
     )
+
     if (checkNextWord.translation === guess) {
       let newMemVal = list.head.value.memory_value * 2
+      list.head.value.memory_value = newMemVal
       list.head.value.correct_count++
+
       let curr = list.head
       let countDown = newMemVal
       while (countDown > 0 && curr.next !== null) {
@@ -89,6 +92,7 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
         countDown--
       }
       let temp = new _Node(list.head.value)
+
       if (curr.next === null) {
         temp.next = curr.next
         curr.next = temp
@@ -103,6 +107,7 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
         temp.value.next = temp.next.value.id
       }
       req.language.total_score++
+
       await LanguageService.updateWordsTable(
         req.app.get('db'),
         toArray(list),
@@ -111,7 +116,7 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
       )
       res.json({
         nextWord: list.head.value.original,
-        // translation: list.head.value.translation, TODO: We need this?
+        // translation: list.head.value.translation,
         totalScore: req.language.total_score,
         wordCorrectCount: list.head.value.correct_count,
         wordIncorrectCount: list.head.value.incorrect_count,
@@ -121,6 +126,7 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
     } else {
       list.head.value.memory_value = 1
       list.head.value.incorrect_count++
+
       let curr = list.head
       let countDown = 1
       while (countDown > 0) {
@@ -133,6 +139,7 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
       list.head = list.head.next
       curr.value.next = temp.value.id
       temp.value.next = temp.next.value.id
+
       await LanguageService.updateWordsTable(
         req.app.get('db'),
         toArray(list),
