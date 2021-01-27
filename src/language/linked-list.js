@@ -110,7 +110,7 @@ class LinkedList {
       str += curr.value + ' '
       curr = curr.next
     }
-    console.log(str)
+    // console.log(str)
   }
   listSize() {
     let curr = this.head
