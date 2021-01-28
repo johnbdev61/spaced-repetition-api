@@ -4,8 +4,8 @@ process.env.JWT_SECRET = 'test-jwt-secret'
 
 require('dotenv').config()
 
-process.env.DB_URL =
-  process.env.DB_URL ||
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL ||
   'postgresql://dunder_mifflin@localhost/spaced-repetition'
 
 const { expect } = require('chai')
