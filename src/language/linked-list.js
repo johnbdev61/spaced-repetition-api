@@ -157,7 +157,7 @@ class LinkedList {
   }
 }
 
-function toArray(linkedList) {
+const toArray = (linkedList) => {
   let currentNode = linkedList.head
   let result = []
   while (currentNode.next !== null) {

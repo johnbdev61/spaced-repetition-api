@@ -74,35 +74,35 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
       req.app.get('db'),
       req.language.id
     )
-    let list = LanguageService.createLinkedList(words, head)
+    let wordList = LanguageService.createLinkedList(words, head)
     let [checkNextWord] = await LanguageService.checkGuess(
       req.app.get('db'),
       req.language.id
     )
 
     if (checkNextWord.translation === guess) {
-      let newMemVal = list.head.value.memory_value * 2
-      list.head.value.memory_value = newMemVal
-      list.head.value.correct_count++
+      let newMemValue = wordList.head.value.memory_value * 2
+      wordList.head.value.memory_value = newMemValue
+      wordList.head.value.correct_count++
 
-      let curr = list.head
-      let countDown = newMemVal
+      let curr = wordList.head
+      let countDown = newMemValue
       while (countDown > 0 && curr.next !== null) {
         curr = curr.next
         countDown--
       }
-      let temp = new _Node(list.head.value)
+      let temp = new _Node(wordList.head.value)
 
       if (curr.next === null) {
         temp.next = curr.next
         curr.next = temp
-        list.head = list.head.next
+        wordList.head = wordList.head.next
         curr.value.next = temp.value.id
         temp.value.next = null
       } else {
         temp.next = curr.next
         curr.next = temp
-        list.head = list.head.next
+        wordList.head = wordList.head.next
         curr.value.next = temp.value.id
         temp.value.next = temp.next.value.id
       }
@@ -110,47 +110,47 @@ languageRouter.post('/guess', bodyParser, async (req, res, next) => {
 
       await LanguageService.updateWordsTable(
         req.app.get('db'),
-        toArray(list),
+        toArray(wordList),
         req.language.id,
         req.language.total_score
       )
       res.json({
-        nextWord: list.head.value.original,
-        // translation: list.head.value.translation,
+        nextWord: wordList.head.value.original,
+        // translation: wordList.head.value.translation,
         totalScore: req.language.total_score,
-        wordCorrectCount: list.head.value.correct_count,
-        wordIncorrectCount: list.head.value.incorrect_count,
+        wordCorrectCount: wordList.head.value.correct_count,
+        wordIncorrectCount: wordList.head.value.incorrect_count,
         answer: temp.value.translation,
         isCorrect: true,
       })
     } else {
-      list.head.value.memory_value = 1
-      list.head.value.incorrect_count++
+      wordList.head.value.memory_value = 1
+      wordList.head.value.incorrect_count++
 
-      let curr = list.head
+      let curr = wordList.head
       let countDown = 1
       while (countDown > 0) {
         curr = curr.next
         countDown--
       }
-      let temp = new _Node(list.head.value)
+      let temp = new _Node(wordList.head.value)
       temp.next = curr.next
       curr.next = temp
-      list.head = list.head.next
+      wordList.head = wordList.head.next
       curr.value.next = temp.value.id
       temp.value.next = temp.next.value.id
 
       await LanguageService.updateWordsTable(
         req.app.get('db'),
-        toArray(list),
+        toArray(wordList),
         req.language.id,
         req.language.total_score
       )
       res.json({
-        nextWord: list.head.value.original,
+        nextWord: wordList.head.value.original,
         totalScore: req.language.total_score,
-        wordCorrectCount: list.head.value.correct_count,
-        wordIncorrectCount: list.head.value.incorrect_count,
+        wordCorrectCount: wordList.head.value.correct_count,
+        wordIncorrectCount: wordList.head.value.incorrect_count,
         answer: temp.value.translation,
         isCorrect: false,
       })
