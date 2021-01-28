@@ -183,12 +183,12 @@ describe('User Endpoints', function () {
           words: [
             { original: 'jouer', translation: 'play' },
             { original: 'souffrance', translation: 'suffering' },
-            { original: 'à la mode', translation: 'fashionable' },
-            { original: 'âcre', translation: 'pungent' },
+            { original: 'fleurs', translation: 'flowers' },
+            { original: 'envisager', translation: 'contemplate' },
             { original: 'transitoire', translation: 'transient' },
-            { original: 'gonflée', translation: 'bloated' },
+            { original: 'redondante', translation: 'redundant' },
             { original: 'gracieuse', translation: 'graceful' },
-            { original: 'misère', translation: 'misery' },
+            { original: 'crier', translation: 'shout' },
           ],
         }
         return supertest(app)

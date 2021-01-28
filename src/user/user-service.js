@@ -60,12 +60,12 @@ const UserService = {
       const languageWords = [
         ['jouer', 'play', 2],
         ['souffrance', 'suffering', 3],
-        ['à la mode', 'fashionable', 4],
-        ['âcre', 'pungent', 5],
+        ['fleurs', 'flowers', 4],
+        ['envisager', 'contemplate', 5],
         ['transitoire', 'transient', 6],
-        ['gonflée', 'bloated', 7],
+        ['redondante', 'redundant', 7],
         ['gracieuse', 'graceful', 8],
-        ['misère', 'misery', null],
+        ['crier', 'shout', null],
       ]
 
       const [languageHeadId] = await trx

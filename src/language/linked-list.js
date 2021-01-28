@@ -61,8 +61,6 @@ class LinkedList {
       while (counter !== pos) {
         tempNode = tempNode.next
         counter++
-        console.log('temp,', tempNode)
-        console.log('counter', counter)
       }
       this.insertBefore(item, tempNode.value)
     }
@@ -98,7 +96,6 @@ class LinkedList {
       currNode = currNode.next
     }
     if (currNode === null) {
-      console.log('item not found')
       return
     }
     previousNode.next = currNode.next
@@ -110,7 +107,6 @@ class LinkedList {
       str += curr.value + ' '
       curr = curr.next
     }
-    // console.log(str)
   }
   listSize() {
     let curr = this.head
