@@ -13,7 +13,7 @@ createdb -U dunder-mifflin spaced-repetition-test
 If your `dunder-mifflin` user has a password be sure to set it in `.env` for all appropriate fields. Or if using a different user, update appropriately.
 
 ```bash
-npm install
+npm i
 npm run migrate
 env MIGRATION_DB_NAME=spaced-repetition-test npm run migrate
 ```
